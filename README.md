@@ -1,2 +1,8 @@
 # jQuery-Input-Filter
-# Must have jQuery,js
+
+javascript input key filtering library
+
+this library use jQuery.js
+
+
+
