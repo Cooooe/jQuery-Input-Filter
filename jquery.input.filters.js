@@ -1,5 +1,69 @@
 var filters = (function(window, $) {
 
+	var Utils = (function() {
+		return {
+			formatLocal: function() {
+				var RegNotNum = /[^0-9]/g;
+				var RegPhonNum = "";
+				var DataForm = "";
+
+				if (str == "" || str == null)
+					return "";
+				// delete not number
+				str = str.replace(RegNotNum, '');
+				if (str.length < 4)
+					return str;
+
+				if (str.length > 3 && str.length < 7) {
+					DataForm = "$1-$2";
+					RegPhonNum = /([0-9]{3})([0-9]+)/;
+				} else if (str.length == 7) {
+					DataForm = "$1-$2";
+					RegPhonNum = /([0-9]{3})([0-9]{4})/;
+				} else if (str.length == 8) {
+					DataForm = "$1-$2";
+					RegPhonNum = /([0-9]{4})([0-9]{4})/;
+				} else if (str.length == 9) {
+					DataForm = "$1-$2-$3";
+					RegPhonNum = /([0-9]{2})([0-9]{3})([0-9]+)/;
+				} else if (str.length == 10) {
+					if (str.substring(0, 2) == "02") {
+						DataForm = "$1-$2-$3";
+						RegPhonNum = /([0-9]{2})([0-9]{4})([0-9]+)/;
+					} else {
+						DataForm = "$1-$2-$3";
+						RegPhonNum = /([0-9]{3})([0-9]{3})([0-9]+)/;
+					}
+				} else if (str.length > 10) {
+					DataForm = "$1-$2-$3";
+					RegPhonNum = /([0-9]{3})([0-9]{4})([0-9]+)/;
+				}
+
+				while (RegPhonNum.test(str)) {
+					str = str.replace(RegPhonNum, DataForm);
+				}
+				
+				return str;
+			},
+			toFixed: function() {
+				var divideNum = 1;
+
+				if ( isNaN(parseFloat(value)) ) {
+					return NaN;
+				}
+
+				for ( var i = 0; i < decimals; i ++ ) {
+					divideNum *= 10;
+				}
+
+			    return Math.floor(divideNum * parseFloat(value)) / divideNum;
+			},
+			removeCommas: function() {
+				return x.replace(/\,/gi, '');
+			}
+		}
+	})();
+
 	var filterDictornary = {
 		n: '\\d',
 		e: 'A-Za-z',
@@ -13,7 +77,7 @@ var filters = (function(window, $) {
 	var maskDictornary = {
 		amount: function(str) {
 			str = str.replace(/[^\d]+/g, '');
-			str = str.replace(/^0?/, '')
+			str = str.replace(/^0?/, '');
 
 			if ( isNaN(str) ) {
 				return '';
@@ -40,9 +104,9 @@ var filters = (function(window, $) {
 		},
 
 		tel: function(str) {
-			return Utils.formatLocal(str)
+			return Utils.formatLocal(str);
 		}
-	}
+	};
 
 	function getCaretPosition(elem) {
 		var input = elem.get(0),
